@@ -8,10 +8,12 @@ import { getUnansweredQuestions, QuestionData } from './QuestionsData';
 import { Page } from './Page';
 import { PageTitle } from './PageTitle';
 import { PrimaryButton } from './Styles';
+import { useNavigate } from 'react-router-dom';
 
 export const HomePage = () => {
   const [questions, setQuestions] = useState<QuestionData[]>([]);
   const [questionsLoading, setQuestionsLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const doGetUnansweredQuestions = async () => {
@@ -31,7 +33,7 @@ export const HomePage = () => {
   //   }, []);
 
   const handleAskQuestionClick = () => {
-    console.log('TODO - move to the AskPage');
+    navigate('ask');
   };
 
   return (
