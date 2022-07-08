@@ -5,9 +5,11 @@ import { jsx } from '@emotion/react';
 import React, { useEffect, useState } from 'react';
 import { Page } from './Page';
 import { useParams } from 'react-router-dom';
-import { QuestionData, getQuestion, postAnswer } from './QuestionsData';
+import { getQuestion, postAnswer } from './QuestionsData';
 import { AnswerList } from './AnswerList';
 import { useForm } from 'react-hook-form';
+import { useSelector, useDispatch } from 'react-redux';
+import { AppState, gettingQuestionAction, gotQuestionAction } from './Store';
 import {
   gray3,
   gray6,
@@ -26,8 +28,12 @@ type FormData = {
 };
 
 export const QuestionPage = () => {
+  const dispatch = useDispatch();
+  const question = useSelector((state: AppState) => state.questions.viewing);
+  const questionsLoading = useSelector(
+    (state: AppState) => state.questions.loading
+  );
   const [successfullySubmitted, setSuccessfullySubmitted] = useState(false);
-  const [question, setQuestion] = useState<QuestionData | null>(null);
   const { questionId } = useParams();
 
   const {
@@ -49,8 +55,9 @@ export const QuestionPage = () => {
 
   useEffect(() => {
     const doGetQuestion = async (questionId: number) => {
+      dispatch(gettingQuestionAction());
       const foundQuestion = await getQuestion(questionId);
-      setQuestion(foundQuestion);
+      dispatch(gotQuestionAction(foundQuestion));
     };
     if (questionId) {
       doGetQuestion(Number(questionId));
